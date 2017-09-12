@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteMappingsManager">
+    <list>
+      <list>
+        <remote-mappings server-id="python@ssh://jerry@192.168.10.88:22/home/share/robot_test/py27env/bin/python">
+          <settings>
+            <list>
+              <mapping local-root="$PROJECT_DIR$" remote-root="/home/share/robot_test/py27env/lib/python2.7/site-packages/ElementLibrary" />
+            </list>
+          </settings>
+        </remote-mappings>
+        <remote-mappings server-id="python@ssh://jerry@192.168.101.120:22/home/share/robot_test/py27env/bin/python">
+          <settings>
+            <list>
+              <mapping local-root="$PROJECT_DIR$" remote-root="/home/share/robot_test/py27env/lib/python2.7/site-packages/ElementLibrary" />
+            </list>
+          </settings>
+        </remote-mappings>
+        <remote-mappings server-id="python@ssh://jerry@192.168.101.120:22/usr/bin/python">
+          <settings>
+            <list>
+              <mapping local-root="$PROJECT_DIR$" remote-root="/home/share/robot_test/py27env/lib/python2.7/site-packages/ElementLibrary" />
+            </list>
+          </settings>
+        </remote-mappings>
+        <remote-mappings server-id="python@ssh://jerry@192.168.101.120:22/home/share/robot_test/py27env/bin/python2.7">
+          <settings>
+            <list>
+              <mapping local-root="$PROJECT_DIR$" remote-root="/home/share/robot_test/py27env/lib/python2.7/site-packages/ElementLibrary" />
+            </list>
+          </settings>
+        </remote-mappings>
+      </list>
+    </list>
+  </component>
+</project>

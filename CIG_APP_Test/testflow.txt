@@ -1,0 +1,14 @@
+*** Settings ***
+Resource          res1.txt
+Library           AppiumLibrary
+
+*** Keywords ***
+login_app
+    [Arguments]    ${PWD}
+    Open_APP
+    Sleep    10
+    Wait Until Page Contains Element    com.mp.cig:id/login_btn
+    Input_PWD    ${PWD}
+    Click Button    SIGN IN
+    Wait Until Page Contains Element    com.mp.cig:id/network_img
+    Close_APP

@@ -1,0 +1,114 @@
+*** Settings ***
+Resource          resource.txt
+
+*** Keywords ***
+upgrade by files
+    [Arguments]    ${path}
+    Brower_Open
+    Select Frame    id = iframeallfirst
+    Click Element    id= checkboxid
+    Choose File    id = selectfile    ${path}
+    Click Button    id = BtnUpgrade
+    Choose Ok On Next Confirmation
+    Confirm Action
+    Unselect Frame
+
+upgrade by ota
+    Select Frame    id = iframeallfirst
+    Click Element    id= checkboxid
+    Select From List    id = selectmod    ota
+    Click Button    id = BtnUpgrade
+    Choose Ok On Next Confirmation
+    Confirm Action
+    Unselect Frame
+
+reduce version
+    Comment    file version
+    ${PATH}    Set Variable    /home/share/robot_test/WF802s_AutoUpgrade/version/${device_type}/new/
+    @{filename}    Evaluate    os.listdir('/home/share/robot_test/WF802s_AutoUpgrade/version/${device_type}/new/')    os
+    upgrade by files    ${PATH}@{filename}[${0}]
+    upgrade_reboot_election_time
+    Close Browser
+
+count of item
+    ${num_litm}    Get Matching Xpath Count    //*[@class="tabulator-row tabulator-selectable"]
+    ${current_num}    Evaluate    str(${num_litm})
+    ${basic_num}    Evaluate    str(${item_num})
+    Should Be Equal As Integers    ${current_num}    ${basic_num}
+
+loopfile
+    ${PATH}    Set Variable    /home/share/robot_test/WF802s_AutoUpgrade/version/${device_type}/new/
+    @{filename}    Evaluate    os.listdir('/home/share/robot_test/WF802s_AutoUpgrade/version/${device_type}/new/')    os
+    ${num}    Evaluate    len(@{filename})
+    ${item_num_int}    Evaluate    int(${item_num})
+    : FOR    ${j}    IN RANGE    ${num}
+    \    ${upgrade_start_time_by_file}    Get Time
+    \    @{current_ver1}    Evaluate    os.path.splitext(${filename}[${j}])    os
+    \    ${file_version}    Evaluate    unicode(("${current_ver1[0]}"),"utf-8")
+    \    upgrade by files    ${PATH}@{filename}[${j}]
+    \    upgrade_reboot_election_time
+    \    Close Browser
+    \    Brower_Open
+    \    Capture Page Screenshot
+    \    Select Frame    id = iframeallfirst
+    \    @{list_version}    version_page
+    \    ${num}    Count Values In List    @{list_version}    ${file_version}
+    \    Should Be Equal As Numbers    ${num}    ${item_num_int}
+    \    count of item
+    \    Unselect Frame
+    \    Close Browser
+    \    ${upgrade_end_time_by_file}    Get Time
+    \    ${upgrade_time_by_file}    Subtract Date From Date    ${upgrade_end_time_by_file}    ${upgrade_start_time_by_file}
+    \    log    ${upgrade_time_by_file}
+    \    log    Upgrade Success By File!
+    \    Comment    Upgrade By OTA
+    \    ${upgrade_start_time_by_ota}    Get Time
+    \    Brower_Open
+    \    upgrade by ota
+    \    upgrade_reboot_election_time
+    \    Close Browser
+    \    Brower_Open
+    \    Capture Page Screenshot
+    \    Select Frame    id = iframeallfirst
+    \    @{list_version}    version_page
+    \    ${num}    Count Values In List    @{list_version}    ${file_version}
+    \    Should Not Be Equal As Numbers    ${num}    ${item_num_int}
+    \    count of item
+    \    Unselect Frame
+    \    Close Browser
+    \    ${upgrade_end_time_by_ota}    Get Time
+    \    ${upgrade_time_by_ota}    Subtract Date From Date    ${upgrade_end_time_by_ota}    ${upgrade_start_time_by_ota}
+    \    log    ${upgrade_time_by_ota}
+    \    log    Upgrade Success By OTA!
+    \    log    'Success ${j}'
+
+version_page
+    Brower_Open
+    Select Frame    id = iframeallfirst
+    @{list}    Create List
+    : FOR    ${i}    IN RANGE    ${item_num}
+    \    ${tmp}    Get Text    //*[@id='central']/div[2]/div/div[${i}+1]/div[4]
+    \    Append To List    ${list}    ${tmp}
+    [Return]    @{list}
+
+guide_dir_upgrade_file
+    ${PATH}    Set Variable    /home/share/robot_test/WF802s_AutoUpgrade/GuideWeb/
+    @{filename}    Evaluate    os.listdir('${PATH}')    os
+    [Return]    @{filename}
+
+guide_upgrade_by_file
+    ${PATH}    Set Variable    /home/share/robot_test/WF802s_AutoUpgrade/GuideWeb/
+    @{file}    guide_dir_upgrade_file
+    ${num}    Evaluate    len(@{file})
+    : FOR    ${i}    IN RANGE    ${num}
+    \    Open Browser    http://192.168.100.1/guide.html
+    \    Maximize Browser Window
+    \    Click Element    a2
+    \    Select Frame    //*[@id="d2"]/iframe
+    \    ${old_ver}    Get Text    firm_ver
+    \    Choose File    upimg    ${PATH}@{file}[${i}]
+    \    Click Button    btnUpimg
+    \    Choose Ok On Next Confirmation
+    \    Confirm Action
+    \    Sleep    300s
+    \    ${new_ver}    Get Text    firm_ver

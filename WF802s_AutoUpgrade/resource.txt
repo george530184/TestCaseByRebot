@@ -1,0 +1,15 @@
+*** Settings ***
+Library           CAPLibrary
+Library           Selenium2Library
+Library           Collections
+Library           ElementLibrary
+Library           DateTime
+
+*** Keywords ***
+Brower_Open
+    ${IP}    Ssdp Discovery
+    Open Browser    http://${IP}/upgrade.html
+
+upgrade_reboot_election_time
+    Judge Page Dead
+    Jdge Cap Pass Again

@@ -1,0 +1,19 @@
+*** Settings ***
+Library           CAPLibrary
+Resource          testflow.txt
+
+*** Variables ***
+${PWD}            ${EMPTY}
+
+*** Test Cases ***
+login_current_pwd
+    ${PWD}    Get Pwd
+    login_app    ${PWD}
+
+login_null_pwd
+    ${PWD}
+    login_app    ${PWD}
+
+test
+    [Tags]    q
+    Remove Application    com.mp.cig

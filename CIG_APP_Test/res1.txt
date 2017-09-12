@@ -1,0 +1,15 @@
+*** Settings ***
+Library           AppiumLibrary
+Variables         var.py
+
+*** Keywords ***
+Open_APP
+    Open Application    http://172.24.23.61:4723/wd/hub    platformName=Android    platformVersion=6.0    deviceName=Google Nexus 9    app = ${APP}    appPackage=com.mp.cig
+    ...    appActivity=com.mp.cig.main.SplashActivity    unicodeKeyboard=True    resetKeyboard=True
+
+Input_PWD
+    [Arguments]    ${PWD}
+    input Text    com.mp.cig:id/user_pswd    ${PWD}
+
+Close_APP
+    Close Application
